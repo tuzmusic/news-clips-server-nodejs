@@ -1,49 +1,15 @@
 const express = require('express');
-const fs = require('fs');
 const request = require('request');
 const cheerio = require('cheerio');
+const cors = require('cors');
+
+const serpstackSearch = require('./serpstackApi.js');
+
 const app = express();
-const { Builder, By, Key, until } = require('selenium-webdriver');
+app.use(cors());
 
-const { getGoogleAlertsResultsWithCheerio } = require('./app.js');
-
-const webdriver = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
-
-const url = 'https://www.google.com/alerts';
-app.get('/selenium', (req, res) => {
-
-    async function getStuff() {
-        const webdriver = require('selenium-webdriver');
-        const By = webdriver.By;
-        const driver = new webdriver.Builder().forBrowser('chrome').build();
-
-        const inputSel = 'label-input-label';
-        const searchText = 'Joe Biden';
-        driver.get(url);
-        driver.findElement(By.className(inputSel)).click();
-        driver.findElement(By.className(inputSel)).sendKeys(searchText);
-    }
-
-
-    getStuff().then(result => res.send(result));
-    // res.send()
-});
-
-app.get('/scrape', (req, res) => {
-    // visit google alerts homepage
-    // request(url, (err, res, html) => {
-    //     if (err) {
-    //         console.log('There was an error. Exiting.');
-    //         return;
-    //     }
-    //
-    //     // load the html from the result
-    //     const content = cheerio.load(html);
-    //     return content
-    // });
-    console.log(`scrape`);
-    res.send('scrape');
+app.get('/', async (req, res) => {
+    const searchText = req.query.query;
 });
 
 app.get('/cheerio', async (req, res) => {
@@ -69,16 +35,15 @@ app.get('/cheerio', async (req, res) => {
             const fullUrl = link.attr('href');
             const linkUrl = fullUrl.split('&url=').pop();
 
-            const info = { linkText: title, linkUrl, publicationName };
+            const info = { title, linkUrl, publicationName };
             resultsArray.push(info);
         }
-        // console.log(resultsArray);
         res.send(resultsArray);
     });
 });
 
 app.listen('8081');
 
-console.log('Magic happens on port 8081');
+console.log('Listening on port 8081');
 
 exports = module.exports = app;
