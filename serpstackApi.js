@@ -1,12 +1,15 @@
 const axios = require('axios');
 const mockResponse = require('./fixtures/mockShaheenResponse.js');
-const { getMetaProperties } = require('./parseMissing.js');
+const { getMetaProperties } = require('./getMetaProperties.js');
 
 const apiKey = '8ddb0998709a870c84eed7567752dfe8';
 
 
 async function serpstackSearch(searchText, mock = false) {
-    if (mock) return mockResponse;
+    if (mock) {
+        console.log('USING MOCK RESULTS FOR "Jeanne Shaheen"');
+        return mockResponse;
+    }
 
     console.log(`searching for "${ searchText }"`);
     const { data } = await axios('http://api.serpstack.com/search', {
@@ -50,6 +53,6 @@ async function run(query, { log, mock }) {
     return infoArray;
 }
 
-run('Jeanne Shaheen', ({ mock: true, log: true }));
+// run('Jeanne Shaheen', ({ mock: true, log: true }));
 
 module.exports = run;
