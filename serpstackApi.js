@@ -17,15 +17,12 @@ async function serpstackSearch(searchText, mock = false) {
             period: 'last_day'
         }
     });
-    // console.log(data);
     if (!data.request.success) {
         throw new Error(data.error.info);
     }
 
     return data.news_results;
 }
-
-exports = module.exports = serpstackSearch;
 
 async function run(query, { log, mock }) {
     // get the raw results from serpStack
@@ -34,8 +31,7 @@ async function run(query, { log, mock }) {
     const infoArray = [];
 
     // resolve/fix missing serpStack data
-    for (let i = 0; i < results.length; i++) {
-        let result = results[i];
+    for (const result of results) {
         const { title, url, source_name } = result;
 
         const resultInfo = { title, url, source: source_name };
@@ -47,10 +43,10 @@ async function run(query, { log, mock }) {
             resultInfo.source = source_name || props.site_name;
             resultInfo.fixed = (resultInfo.title && resultInfo.source) && true || false;
         }
-        if (log) console.log(i, resultInfo);
+        if (log) console.log(infoArray.length, resultInfo);
+
         infoArray.push(resultInfo);
     }
-
     return infoArray;
 }
 

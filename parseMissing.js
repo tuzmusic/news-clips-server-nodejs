@@ -23,7 +23,7 @@ async function getMetaProperties(url) {
 
     const properties = {};
 
-    // go through the metanodes and get potentially relevant properties.
+    // go through the meta nodes and get potentially relevant properties.
     // note: cheerio results aren't iterable so you can't do forof
     for (let j = 0; j < metaNodes.length; j++) {
         const attr = metaNodes[j].attribs;
