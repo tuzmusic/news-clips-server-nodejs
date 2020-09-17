@@ -27,9 +27,9 @@ async function serpstackSearch(searchText, mock = false) {
 
 exports = module.exports = serpstackSearch;
 
-async function run(query) {
+async function run(query, { log, mock }) {
     // get the raw results from serpStack
-    const results = await serpstackSearch(query, true);
+    const results = await serpstackSearch(query, mock);
 
     const infoArray = [];
 
@@ -38,22 +38,22 @@ async function run(query) {
         let result = results[i];
         const { title, url, source_name } = result;
 
-        const resultInfo = { title, /*url,*/ source: source_name };
+        const resultInfo = { title, url, source: source_name };
+
         // scrape the meta tags from the url, only if it needs to be fixed
-        let props;
         if (!title || title.endsWith('...')) {
-            props = await getMetaProperties(url);
+            const props = await getMetaProperties(url);
             resultInfo.title = props.title;
             resultInfo.source = source_name || props.site_name;
             resultInfo.fixed = (resultInfo.title && resultInfo.source) && true || false;
         }
-        // console.log(i, resultInfo);
+        if (log) console.log(i, resultInfo);
         infoArray.push(resultInfo);
     }
 
     return infoArray;
 }
 
-run('Jeanne Shaheen');
+run('Jeanne Shaheen', ({ mock: true, log: true }));
 
 module.exports = run;

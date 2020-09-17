@@ -3,8 +3,6 @@ const request = require('request');
 const cheerio = require('cheerio');
 const cors = require('cors');
 
-const serpstackSearch = require('./serpstackApi.js');
-
 const app = express();
 app.use(cors());
 
