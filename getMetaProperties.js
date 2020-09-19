@@ -12,11 +12,21 @@ function asyncRequest(url) {
 }
 
 async function getMetaProperties(url) {
-    // fetch the page (asynchronously)
-    const { html } = await asyncRequest(url);
+    let scraped;
+    try { // fetch the page (asynchronously)
+        const { html } = await asyncRequest(url);
+        scraped = html;
+    } catch (e) {
+        // if there's a redirect issue (or any other issue I guess) we'll go here,
+        // allowing the link text to just be the url
+        return {
+            title: url,
+            site_name: 'ERROR FETCHING ARTICLE'
+        };
+    }
 
     // scrape/parse the page (synchronously)
-    const $ = cheerio.load(html);
+    const $ = cheerio.load(scraped);
 
     // get all meta tags from the page
     const metaNodes = $('meta');

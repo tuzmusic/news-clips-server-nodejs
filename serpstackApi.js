@@ -6,7 +6,8 @@ const apiKey = '8ddb0998709a870c84eed7567752dfe8';
 
 
 async function serpstackSearch(searchText, mock = false) {
-    if (mock) {
+    // TODO: get mock as boolean instead of string!!!
+    if (mock === 'true') {
         console.log('USING MOCK RESULTS FOR "Jeanne Shaheen"');
         return mockResponse;
     }
@@ -20,6 +21,7 @@ async function serpstackSearch(searchText, mock = false) {
             period: 'last_day'
         }
     });
+    // TODO: Does this make sense? It was copied directly from the preact implementation.
     if (!data.request.success) {
         throw new Error(data.error.info);
     }
